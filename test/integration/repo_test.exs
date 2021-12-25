@@ -533,5 +533,21 @@ defmodule ArangoXEctoTest.Integration.RepoTest do
     assert Repo.get(Post, id).virt == "iamavirtualfield"
   end
 
+  describe "multi-tenancy" do
+    test "insert into custom prefix" do
+      post = Repo.insert!(%Post{title: "abc", text: "def"}, prefix: "tenant_1")
+
+      assert [post] = Repo.all(Post, prefix: "tenant_1")
+    end
+
+    test "different values in tenants" do
+      post1 = Repo.insert!(%Post{title: "abc", text: "def"}, prefix: "tenant_1")
+      post2 = Repo.insert!(%Post{title: "cba", text: "fed"}, prefix: "tenant_2")
+
+      assert [post1] = Repo.all(Post, prefix: "tenant_1")
+      assert [post2] = Repo.all(Post, prefix: "tenant_2")
+    end
+  end
+
   # TODO: Add advanced querying tests
 end
