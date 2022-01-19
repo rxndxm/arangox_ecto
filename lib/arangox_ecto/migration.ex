@@ -45,7 +45,7 @@ defmodule ArangoXEcto.Migration do
 
   defmodule Collection do
     @moduledoc false
-    defstruct [:name, :type]
+    defstruct [:name, :type, :keyOptions]
 
     @type t :: %__MODULE__{}
   end
@@ -92,6 +92,15 @@ defmodule ArangoXEcto.Migration do
   @spec collection(String.t(), atom()) :: Collection.t()
   def collection(collection_name, type \\ :document) do
     %Collection{name: collection_name, type: collection_type(type)}
+  end
+
+  @spec collection(String.t(), atom(), map()) :: Collection.t()
+  def collection(collection_name, type, keyOptions) do
+    %Collection{
+      name: collection_name,
+      type: collection_type(type),
+      keyOptions: keyOptions
+    }
   end
 
   @doc """
